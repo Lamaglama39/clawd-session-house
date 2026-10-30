@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clawd Session House</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header class="topbar" id="topbar" title="ダブルクリックまたはFキーで全画面" data-i18n-title>
+      <h1 class="title">
+        <img class="title-mark" src="favicon.svg" alt="" />
+        <span class="title-text">Clawd Session House</span>
+      </h1>
+      <ul class="counts">
+        <li class="count" data-state="wait" title="承認待ち" data-i18n-title>
+          <span class="mark"></span><span class="count-label" data-i18n>承認待ち</span
+          ><b data-count="wait">0</b>
+        </li>
+        <li class="count" data-state="busy" title="処理中" data-i18n-title>
+          <span class="mark"></span><span class="count-label" data-i18n>処理中</span
+          ><b data-count="busy">0</b>
+        </li>
+        <li class="count" data-state="idle" title="待機中" data-i18n-title>
+          <span class="mark"></span><span class="count-label" data-i18n>待機中</span
+          ><b data-count="idle">0</b>
+        </li>
+        <li class="count count-agents" title="作業中のサブエージェント" data-i18n-title>
+          <span class="count-label" data-i18n>サブエージェント</span><b data-count="agents">0</b>
+        </li>
+      </ul>
+      <div class="meta">
+        <button class="pill notify" id="notify" type="button" aria-pressed="false">
+          通知 オフ
+        </button>
+        <a class="pill" href="history.html" data-i18n>振り返り</a>
+        <div class="lang" role="group" aria-label="表示言語" data-i18n-aria-label>
+          <button type="button" data-lang="ja" lang="ja" title="日本語" aria-label="日本語">
+            JA
+          </button>
+          <button type="button" data-lang="en" lang="en" title="English" aria-label="English">
+            EN
+          </button>
+        </div>
+        <span
+          class="conn"
+          id="conn"
+          data-conn="connecting"
+          title="サーバーとの接続が切れています。自動で再接続します"
+          data-i18n-title
+          data-i18n
+          >再接続中</span
+        >
+      </div>
+    </header>
+
+    <main class="grid" id="grid"></main>
+
+    <section class="empty" id="empty" hidden>
+      <div class="empty-stage room"><canvas class="clawd" id="empty-clawd"></canvas></div>
+      <p class="empty-title" data-i18n>セッションを待っています</p>
+      <p class="empty-hint" data-i18n>Claude Codeを起動すると、ここにセッションが表示されます</p>
+    </section>
+
+    <template id="tile-template">
+      <article class="tile" draggable="true">
+        <header class="tile-head">
+          <div class="tile-names">
+            <div class="tile-heading">
+              <span class="tile-name"></span>
+              <span class="tile-suffix"></span>
+            </div>
+            <div class="tile-folder"></div>
+          </div>
+          <button
+            class="tile-dismiss"
+            type="button"
+            title="このタイルを消す"
+            aria-label="このタイルを消す"
+            data-i18n-title
+            data-i18n-aria-label
+          >
+            ×
+          </button>
+        </header>
+        <div class="tile-stage room"><canvas class="clawd"></canvas></div>
+        <div class="tile-agents" hidden></div>
+        <footer class="tile-foot">
+          <div class="tile-status">
+            <span class="badge"></span>
+            <span class="tile-elapsed"></span>
+            <span class="tile-chips">
+              <span class="tile-chip tile-mode" hidden></span>
+              <span class="tile-chip tile-tasks" hidden></span>
+              <span class="tile-chip tile-bg" hidden></span>
+            </span>
+          </div>
+          <div class="tile-detail"></div>
+        </footer>
+      </article>
+    </template>
+  </body>
+</html>

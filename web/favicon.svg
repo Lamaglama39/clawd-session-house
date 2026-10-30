@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="6 6 132 103" shape-rendering="crispEdges">
+  <!-- Serves as both the favicon and the header logo. As a favicon it is centered in a square, keeping its aspect ratio -->
+  <path
+    fill="#d17455"
+    d="M18 6h108v27h12v24h-12v52h-12v-21h-12v21h-12v-21h-36v21h-12v-21h-12v21h-12v-52h-12v-24h12z"
+  />
+  <rect x="30" y="32" width="12" height="13" />
+  <rect x="102" y="32" width="12" height="13" />
+</svg>
