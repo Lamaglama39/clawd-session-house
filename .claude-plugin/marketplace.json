@@ -1,0 +1,14 @@
+{
+  "name": "lamaglama39",
+  "description": "Claude Code plugins by Lamaglama39.",
+  "owner": {
+    "name": "Lamaglama39"
+  },
+  "plugins": [
+    {
+      "name": "clawd-session-house",
+      "source": "./",
+      "description": "Watch every Claude Code session as an animated room in your browser: live status, approval alerts, subagents, and a local history."
+    }
+  ]
+}

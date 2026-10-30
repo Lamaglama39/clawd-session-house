@@ -1,0 +1,11 @@
+{
+  "name": "clawd-session-house",
+  "version": "0.1.0",
+  "description": "Watch every Claude Code session as an animated room in your browser: live status, approval alerts, subagents, and a local history.",
+  "author": {
+    "name": "Lamaglama39"
+  },
+  "homepage": "https://github.com/Lamaglama39/clawd-session-house",
+  "repository": "https://github.com/Lamaglama39/clawd-session-house",
+  "license": "MIT"
+}
