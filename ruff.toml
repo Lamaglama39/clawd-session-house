@@ -1,0 +1,7 @@
+line-length = 100
+target-version = "py38"
+
+[lint]
+select = ["E", "F", "W", "B", "UP"]
+# Keep explicit encodings instead of relying on defaults
+ignore = ["UP012"]

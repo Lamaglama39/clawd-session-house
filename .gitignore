@@ -1,0 +1,15 @@
+.tmp
+
+# Runtime files of the status server (PID, logs)
+/run/
+
+# Python
+__pycache__/
+*.pyc
+
+# Formatter caches (npx prettier / ruff)
+node_modules/
+.ruff_cache/
+
+# History database for the review page
+/data/
