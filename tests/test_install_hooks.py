@@ -10,7 +10,7 @@ import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 _spec = importlib.util.spec_from_file_location(
-    "install_hooks", os.path.join(HERE, "..", "scripts", "install-hooks.py")
+    "install_hooks", os.path.join(HERE, "..", "plugin", "scripts", "install-hooks.py")
 )
 install_hooks = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(install_hooks)
@@ -34,7 +34,7 @@ class InstallTest(unittest.TestCase):
     def test_plugin_hooks_match_installer(self):
         # The plugin's hooks.json is maintained by hand, so check its events, matchers, and timeouts
         # match install-hooks.py (only the commands differ for the plugin)
-        with open(os.path.join(HERE, "..", "hooks", "hooks.json"), encoding="utf-8") as f:
+        with open(os.path.join(HERE, "..", "plugin", "hooks", "hooks.json"), encoding="utf-8") as f:
             plugin = json.load(f)["hooks"]
         expected = install_hooks.install({})["hooks"]
         for event, groups in expected.items():

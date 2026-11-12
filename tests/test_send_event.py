@@ -10,11 +10,11 @@ import time
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(HERE, "..", "server"))
+sys.path.insert(0, os.path.join(HERE, "..", "plugin", "server"))
 
 import server  # noqa: E402
 
-SEND_EVENT = os.path.join(HERE, "..", "hooks", "send-event.sh")
+SEND_EVENT = os.path.join(HERE, "..", "plugin", "hooks", "send-event.sh")
 
 
 def run_hook(payload, env_extra):

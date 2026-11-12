@@ -13,8 +13,8 @@ import {
   periodQuery,
   sortRows,
   timelineLayout,
-} from "../web/history-lib.js";
-import { setLang, t } from "../web/i18n.js";
+} from "../plugin/web/history-lib.js";
+import { setLang, t } from "../plugin/web/i18n.js";
 
 const MIN = 60_000;
 const HOUR = 60 * MIN;

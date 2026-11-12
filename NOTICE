@@ -5,13 +5,16 @@ The MIT License (see LICENSE) covers the SOURCE CODE in this repository.
 
 It does NOT cover the Clawd mascot. The Clawd mascot is (c) Anthropic PBC and
 remains Anthropic's property. It appears in the following places, which are
-included only for use with this plugin:
+included only for use with this plugin. The plugin files are in plugin/ in the
+repository, and the paths below are relative to that folder:
 
   * web/clawd.js - the pixel-art Clawd (body, arms, eyes and legs) and the
     poses built on it. The part dimensions were measured from a reference
     image of Clawd. The subagents in web/agents.js are drawn by the same code.
   * web/favicon.svg - the same shape, used as the favicon and the header logo.
-  * docs/images/ - screenshots of the dashboard that show Clawd.
+
+Clawd also appears in the screenshots of the dashboard in docs/images/ at the
+repository root.
 
 The license of this repository does NOT grant any right to use the Clawd
 mascot. If you fork or redistribute this repository, you are responsible for

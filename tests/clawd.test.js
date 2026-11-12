@@ -11,7 +11,7 @@ import {
   computePose,
   drawClawd,
   resolveScene,
-} from "../web/clawd.js";
+} from "../plugin/web/clawd.js";
 
 const CLAWD = [209, 116, 85];
 const BG = [18, 18, 22];

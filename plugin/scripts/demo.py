@@ -2,12 +2,12 @@
 """Send fake hook events to the status server to preview the dashboard.
 
 Usage:
-    python3 scripts/demo.py                # 4 sessions that keep changing state (Ctrl+C to end)
-    python3 scripts/demo.py --sessions 9
-    python3 scripts/demo.py --static 6     # 6 sessions frozen in mixed states, then exit
-    python3 scripts/demo.py --url http://127.0.0.1:9000/hook
-    python3 scripts/demo.py --seed-history /tmp/demo-history.sqlite3 --days 30
-                                           # write 30 days of fake history for the review page
+    python3 plugin/scripts/demo.py             # 4 sessions that keep changing state (Ctrl+C to end)
+    python3 plugin/scripts/demo.py --sessions 9
+    python3 plugin/scripts/demo.py --static 6  # 6 sessions frozen in mixed states, then exit
+    python3 plugin/scripts/demo.py --url http://127.0.0.1:9000/hook
+    python3 plugin/scripts/demo.py --seed-history /tmp/demo-history.sqlite3 --days 30
+                                               # write 30 days of fake history for the review page
 """
 
 import argparse

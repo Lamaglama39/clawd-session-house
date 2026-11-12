@@ -7,7 +7,9 @@ import sys
 import threading
 import unittest
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "server"))
+sys.path.insert(
+    0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "plugin", "server")
+)
 
 import server  # noqa: E402
 

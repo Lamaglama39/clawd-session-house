@@ -68,12 +68,12 @@ Claude Code 2.1.275より前では、マーケットプレイスを追加して�
 ```bash
 git clone https://github.com/Lamaglama39/clawd-session-house.git
 cd clawd-session-house
-python3 scripts/install-hooks.py --dry-run   # 追加内容を表示するだけ
-python3 scripts/install-hooks.py
+python3 plugin/scripts/install-hooks.py --dry-run   # 追加内容を表示するだけ
+python3 plugin/scripts/install-hooks.py
 ```
 
 > [!NOTE]
-> 両方の方法で入れると、イベントが2回届いて記録が二重になります。手動からプラグインに切り替えるときは、先に`python3 scripts/install-hooks.py --uninstall`を実行してください。
+> 両方の方法で入れると、イベントが2回届いて記録が二重になります。手動からプラグインに切り替えるときは、先に`python3 plugin/scripts/install-hooks.py --uninstall`を実行してください。
 
 手元のリポジトリをプラグインとして読み込み、変更を試す方法は、[開発](docs/development.md#プラグインとして試す)を参照してください。
 
@@ -104,9 +104,12 @@ claude plugin update clawd-session-house@lamaglama39
 
 ```bash
 git pull
-python3 scripts/install-hooks.py
-./scripts/stop-server.sh && ./scripts/start-server.sh
+python3 plugin/scripts/install-hooks.py
+./plugin/scripts/stop-server.sh && ./plugin/scripts/start-server.sh
 ```
+
+> [!NOTE]
+> プラグインのファイルは`plugin/`の下に移しました。以前の`scripts/`などで実行していた場合は、上のように`plugin/`を付けて実行してください。`git pull`してからフックを登録し直すまでの間は、Claude Codeにフックのエラーが出ることがあります。振り返りの記録の`data/`は、これまでどおりリポジトリの直下に置きます。
 
 どちらの場合も、開いているダッシュボードは再読み込みすると新しい画面になります。
 
@@ -122,8 +125,8 @@ claude plugin marketplace remove lamaglama39   # マーケットプレイスの�
 手動で入れた場合は、次のとおりです。
 
 ```bash
-./scripts/stop-server.sh
-python3 scripts/install-hooks.py --uninstall
+./plugin/scripts/stop-server.sh
+python3 plugin/scripts/install-hooks.py --uninstall
 rm -rf data run   # 振り返りの記録とログも消す場合
 ```
 
@@ -141,8 +144,8 @@ rm -rf data run   # 振り返りの記録とログも消す場合
 Clawdのキャラクターは、MITライセンスの対象外です。ClawdはAnthropic PBCの著作物で、著作権表示は「© Anthropic PBC」です。
 Clawdは、次のファイルに含まれます。
 
-- `web/clawd.js`: Clawdのドット絵を描くコード
-- `web/favicon.svg`: ファビコン
+- `plugin/web/clawd.js`: Clawdのドット絵を描くコード
+- `plugin/web/favicon.svg`: ファビコン
 - `docs/images/`: スクリーンショット
 
 これらはこのプラグインで使うためだけに置いており、このリポジトリのライセンスはClawdを使う権利を与えません。フォークや再配布をするときは、Clawdの扱いをご自身の責任で判断してください。詳しくは[NOTICE](NOTICE)を参照してください。

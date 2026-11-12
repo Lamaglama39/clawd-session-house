@@ -4,8 +4,8 @@
 #  Starts server.py in the background. Does nothing if a server already responds.
 #  After starting, waits up to 3 seconds for the health check to pass.
 #
-#  Usage:  scripts/start-server.sh [server.py options...]
-#    e.g.:  scripts/start-server.sh --port 9000
+#  Usage:  plugin/scripts/start-server.sh [server.py options...]
+#    e.g.:  plugin/scripts/start-server.sh --port 9000
 #  Environment variables:
 #    CLAUDE_STATUS_PORT     port (default: 8765)
 #    CLAUDE_STATUS_RUN_DIR  where the PID and log files go (default: run/ at the repository root,
@@ -15,9 +15,10 @@
 #  on another port is never mistaken for a stale PID file and stopped.
 # ============================================================================
 
-# DIR is the root of the repository (plugin). run/ and data/ live here too
+# DIR is the root of the plugin. A manual install keeps run/ and data/ one level up,
+# at the repository root
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RUN="${CLAUDE_STATUS_RUN_DIR:-${CLAUDE_PLUGIN_DATA:-$DIR}/run}"
+RUN="${CLAUDE_STATUS_RUN_DIR:-${CLAUDE_PLUGIN_DATA:-$(dirname "$DIR")}/run}"
 mkdir -p "$RUN"
 
 # If --port is given, use it for the health check URL and the PID file as well

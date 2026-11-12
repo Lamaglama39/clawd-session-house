@@ -5,8 +5,8 @@
 ```mermaid
 flowchart LR
     Sessions["Claude Code<br/>セッションA, B, C..."]
-    Hook["hooks/send-event.sh<br/>フック入力JSONをcurlで転送"]
-    Server["server/server.py<br/>(127.0.0.1:8765)"]
+    Hook["plugin/hooks/send-event.sh<br/>フック入力JSONをcurlで転送"]
+    Server["plugin/server/server.py<br/>(127.0.0.1:8765)"]
     DB[("history.sqlite3<br/>振り返り用の記録")]
     Browser["ブラウザ<br/>ライブ表示 / 振り返り"]
 
@@ -120,8 +120,8 @@ flowchart LR
 
 ## プラグインとして動くとき
 
-- フックは`hooks/hooks.json`で登録します。イベント・matcher・timeoutは`scripts/install-hooks.py`と同じです。
-- `open`、`restart`、`stop`の3つのスキルは、`scripts/`のスクリプトを実行し、その結果をClaudeが伝えます。`restart`と`stop`はほかのセッションの表示にも影響するので、ユーザーが呼んだときだけ動きます。
+- フックは`plugin/hooks/hooks.json`で登録します。イベント・matcher・timeoutは`plugin/scripts/install-hooks.py`と同じです。
+- `open`、`restart`、`stop`の3つのスキルは、`plugin/scripts/`のスクリプトを実行し、その結果をClaudeが伝えます。`restart`と`stop`はほかのセッションの表示にも影響するので、ユーザーが呼んだときだけ動きます。
 - 記録、PID、ログは`~/.claude/plugins/data/clawd-session-house-lamaglama39/`に置きます。Claude Codeがプラグインに用意するデータの置き場所で、プラグインを更新しても残り、アンインストールすると消えます。
 - プラグインを更新したあと新しいセッションを始めると、古い版のサーバーを止めて、新しい版で起動し直します。仕組みは[開発](development.md#プラグインの実装メモ)を参照してください。
 

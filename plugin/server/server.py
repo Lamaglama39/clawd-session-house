@@ -12,11 +12,11 @@ that the review page (``/history.html``) reads through ``/api/history/*``.
 Only the Python standard library is used.
 
 Usage:
-    python3 server/server.py                 # http://127.0.0.1:8765/
-    python3 server/server.py --port 9000
-    python3 server/server.py --host 0.0.0.0  # allow other devices on the LAN to view it
-    python3 server/server.py --db /path/to/history.sqlite3 --history-days 90
-    python3 server/server.py --no-history    # dashboard only, record nothing
+    python3 plugin/server/server.py                 # http://127.0.0.1:8765/
+    python3 plugin/server/server.py --port 9000
+    python3 plugin/server/server.py --host 0.0.0.0  # allow other devices on the LAN to view it
+    python3 plugin/server/server.py --db /path/to/history.sqlite3 --history-days 90
+    python3 plugin/server/server.py --no-history    # dashboard only, record nothing
 """
 
 import argparse
@@ -37,9 +37,11 @@ from history import DEFAULT_RETENTION_DAYS, HistoryStore, date_range, day_range,
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 WEB_DIR = os.path.join(ROOT_DIR, "web")
-# Under the plugin, store data in the plugin data directory, which survives updates
+# Under the plugin, store data in the plugin data directory, which survives updates.
+# A manual install keeps data/ at the repository root, one level above the plugin directory
 DEFAULT_DB = os.path.join(
-    os.environ.get("CLAUDE_PLUGIN_DATA") or os.path.join(ROOT_DIR, "data"), "history.sqlite3"
+    os.environ.get("CLAUDE_PLUGIN_DATA") or os.path.join(os.path.dirname(ROOT_DIR), "data"),
+    "history.sqlite3",
 )
 
 DEFAULT_HOST = "127.0.0.1"

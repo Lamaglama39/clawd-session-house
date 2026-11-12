@@ -3,7 +3,7 @@
 #  open-dashboard.sh
 #  Starts the server with start-server.sh if it is not running, then opens the dashboard.
 #
-#  Usage:  scripts/open-dashboard.sh
+#  Usage:  plugin/scripts/open-dashboard.sh
 #  The port can be set with the CLAUDE_STATUS_PORT environment variable (default: 8765).
 # ============================================================================
 
