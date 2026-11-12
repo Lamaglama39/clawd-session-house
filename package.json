@@ -4,9 +4,9 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js && python3 -m unittest discover -s tests",
-    "test:ui": "uv run --no-project --with playwright==1.64.1 python -m unittest discover -s tests -p test_ui.py -v",
-    "lint": "uvx ruff@0.17.4 check . && uvx ruff@0.17.4 format --check . && npx --yes prettier@3.10.0 --check . && uvx --from shellcheck-py==0.11.0.1 shellcheck plugin/hooks/*.sh plugin/scripts/*.sh && uvx --from shfmt-py==4.2.0 shfmt -d -i 2 plugin/hooks/*.sh plugin/scripts/*.sh",
-    "format": "uvx ruff@0.17.4 format . && npx --yes prettier@3.10.0 --write . && uvx --from shfmt-py==4.2.0 shfmt -w -i 2 plugin/hooks/*.sh plugin/scripts/*.sh",
+    "test:ui": "uv run --isolated --no-project --with playwright==1.64.1 python -m unittest discover -s tests -p test_ui.py -v",
+    "lint": "uv run --isolated --no-project --with ruff==0.17.4 ruff check . && uv run --isolated --no-project --with ruff==0.17.4 ruff format --check . && npx --yes prettier@3.9.10 --check . && uv run --isolated --no-project --with shellcheck-py==0.11.0.1 shellcheck plugin/hooks/*.sh plugin/scripts/*.sh && uv run --isolated --no-project --with shfmt-py==4.2.0 shfmt -d -i 2 plugin/hooks/*.sh plugin/scripts/*.sh",
+    "format": "uv run --isolated --no-project --with ruff==0.17.4 ruff format . && npx --yes prettier@3.9.10 --write . && uv run --isolated --no-project --with shfmt-py==4.2.0 shfmt -w -i 2 plugin/hooks/*.sh plugin/scripts/*.sh",
     "check": "npm test && npm run lint && claude plugin validate --strict . && claude plugin validate --strict plugin"
   }
 }

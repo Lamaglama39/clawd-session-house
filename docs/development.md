@@ -14,7 +14,15 @@ npm run format                             # ruff、prettier、shfmtで整形
 npm run test:ui                            # ライブ表示と振り返り画面をブラウザで開いて確かめ、スクリーンショットを撮る
 ```
 
-lintと整形のツールは、`uvx`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
+lintと整形のツールは、`uv run --isolated --no-project --with`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
+
+### ツールの版
+
+取得するのは、公開から7日たった版だけです。公開直後の版に問題があったときに、巻き込まれないようにするためです。
+
+- 直下の`uv.toml`（`exclude-newer = "7 days"`）と`.npmrc`（`min-release-age=7`）で決めています。それより新しい版を指定すると、取得できずに失敗します。uv 0.12.6とnpm 11.19で確かめています。
+- `uvx`は、リポジトリの`uv.toml`を読みません。このリポジトリでは`uvx`を使わず、`uv run --isolated --no-project --with`を使います。`--isolated`を付けるのは、手元のPythonに入っているパッケージをツールから見えなくし、取得した版だけで動かすためです。
+- 版を上げるときは、`package.json`の版を、公開から7日以上たった版に書き換えます。
 
 ### 画面のテスト
 
@@ -141,6 +149,7 @@ Claude Codeは、`plugin/.claude-plugin/plugin.json`の`version`で更新を見�
 ├── docs/                 仕様、設定と運用、困ったとき、開発。images/にREADMEのスクリーンショット
 ├── CLAUDE.md             Claude Codeで開発するときの指示
 ├── .claude/              Claude Codeの設定と、検証のスキルverify
+├── uv.toml / .npmrc      ツールを公開から7日たった版だけにする設定
 ├── .claude-plugin/       マーケットプレイスの定義marketplace.json。sourceは./plugin
 ├── plugin/               プラグイン本体。利用者の手元にコピーされるのはここだけ
 │   ├── .claude-plugin/   プラグインの定義plugin.json

@@ -40,7 +40,12 @@
 | Pythonのテストを1ファイル | `python3 -m unittest discover -s tests -p 'test_server.py' -v`                        |
 | Nodeのテストを1ファイル   | `node --test tests/app-lib.test.js`                                                   |
 
-必要なもの: Python 3.9以上、Node.js 22以上、`uv`（`uvx`でlintと整形のツール、`uv run`で画面のテストのPlaywrightを、版を固定して実行する）、Google Chrome（画面のテスト）、Claude Code。
+必要なもの: Python 3.9以上、Node.js 22以上、`uv`（lintと整形のツールと、画面のテストのPlaywrightを、`uv run`で版を固定して実行する）、Google Chrome（画面のテスト）、Claude Code。
+
+ツールの版は、公開から7日以上たったものだけを使う。直下の`uv.toml`と`.npmrc`で、それより新しい版は取得されない。
+
+- ツールを足したり版を上げたりするときは、`package.json`に公開から7日以上たった版を書く。取得できないときに、設定を外したり上書きしたりしない。
+- `uvx`は使わない。リポジトリの`uv.toml`を読まないため、`uv run --isolated --no-project --with`を使う。`--isolated`が無いと、手元のPythonに入っているパッケージまでツールから見えてしまう。
 
 ## 壊してはいけない約束
 
