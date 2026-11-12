@@ -34,12 +34,13 @@
 | ------------------------- | ------------------------------------------------------------------------------------- |
 | すべての検証              | `npm run check`。テスト、lint、整形の確認、マーケットプレイスとプラグインの定義の検証 |
 | テスト                    | `npm test`                                                                            |
+| 画面のテスト              | `npm run test:ui`。スクリーンショットを`.tmp/screenshots/<日時>/`に保存する           |
 | lintと整形の確認          | `npm run lint`。ruff、prettier、shellcheck、shfmt                                     |
 | 整形                      | `npm run format`                                                                      |
 | Pythonのテストを1ファイル | `python3 -m unittest discover -s tests -p 'test_server.py' -v`                        |
 | Nodeのテストを1ファイル   | `node --test tests/app-lib.test.js`                                                   |
 
-必要なもの: Python 3.9以上、Node.js 22以上、`uv`（`uvx`でlintと整形のツールを版を固定して実行する）、Claude Code。
+必要なもの: Python 3.9以上、Node.js 22以上、`uv`（`uvx`でlintと整形のツール、`uv run`で画面のテストのPlaywrightを、版を固定して実行する）、Google Chrome（画面のテスト）、Claude Code。
 
 ## 壊してはいけない約束
 
@@ -102,6 +103,6 @@
 
 - `npm run check`が通る。
 - 変えた動作と直した不具合に、テストがある。
-- 画面を変えたら、テスト用のポートでブラウザの表示を確かめた。
+- 画面を変えたら、`npm run test:ui`が通り、撮ったスクリーンショットで見た目を確かめた。
 - `README.md`、`docs/`、英訳が実装と合っている。
 - 開発用のファイルを`plugin/`に置いていない。

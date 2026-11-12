@@ -24,16 +24,27 @@ npm run check
 | 変えた場所                                                    | 追加の確認                                                                                                                                            |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `plugin/server/`、`plugin/scripts/*.py`、`tests/*.py`         | Python 3.9でも通るか: `uv run --no-project --python 3.9 python -m unittest discover -s tests`                                                         |
-| `plugin/web/`                                                 | 下の手順で、テスト用のポートのサーバーを使ってブラウザの表示を確かめる                                                                                |
+| `plugin/web/`                                                 | `npm run test:ui`を実行し、`.tmp/screenshots/<日時>/`の画像を見る。テストに無い操作は、下の手順でテスト用のポートのサーバーを使って確かめる           |
 | `plugin/web/`の文言                                           | 足した日本語の文言に、`plugin/web/i18n.js`の英訳がある。「JA / EN」で切り替えて表示を確かめる                                                         |
 | `plugin/hooks/`、`plugin/scripts/install-hooks.py`            | `plugin/hooks/hooks.json`と`HOOK_EVENTS`が揃っている。`send-event.sh`がサーバーが止まっていても何も出さず`exit 0`で終わる                             |
 | `plugin/skills/`、`.claude-plugin/`、`plugin/.claude-plugin/` | `claude plugin validate --strict .`と`claude plugin validate --strict plugin`。スキルの動作は、ユーザーに下の「プラグインとして試す」で確かめてもらう |
 | `README.md`、`docs/`                                          | リンク先の見出しがある。書いた数値がコードの定数と合っている                                                                                          |
 | 新しいファイル                                                | 開発用のファイルを`plugin/`に置いていない。`plugin/`の直下に足したら、`tests/test_plugin_layout.py`の`SHIPPED`にも足した                              |
 
+### 画面のテストとスクリーンショット
+
+```bash
+npm run test:ui
+```
+
+- 空いているポートにテスト用のサーバーを立て、手元のGoogle Chromeで、ライブ表示と振り返り画面を複数の幅と英語で開きます。横にはみ出さないこと、タイルの「×」の2回押し、ページ送りなどを確かめます。
+- スクリーンショットは`.tmp/screenshots/<日時>/`に保存されます。最後に表示される保存先の画像を開き、見た目を確かめる。
+- Playwrightは`uv`が版を固定して用意するので、手元に入れる必要はありません。普段の`npm test`では、このテストは飛ばされます。
+- 画面に操作を足したら、`tests/test_ui.py`にも確かめる処理を足す。
+
 ### ブラウザで表示を確かめる
 
-普段使いの`8765`番のサーバーには触れず、`18765`番で試します。シェルの状態はコマンドの間で引き継がれないので、毎回`CLAUDE_STATUS_PORT`と`CLAUDE_STATUS_RUN_DIR`を付けます。
+テストに無い操作を手で試すときの手順です。普段使いの`8765`番のサーバーには触れず、`18765`番で試します。シェルの状態はコマンドの間で引き継がれないので、毎回`CLAUDE_STATUS_PORT`と`CLAUDE_STATUS_RUN_DIR`を付けます。
 
 ```bash
 CLAUDE_STATUS_PORT=18765 CLAUDE_STATUS_RUN_DIR=.tmp/run-verify ./plugin/scripts/start-server.sh --no-history

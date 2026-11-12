@@ -11,9 +11,19 @@ claude plugin validate .                   # マーケットプレイスの定�
 claude plugin validate plugin              # プラグインの定義を検証
 npm run lint                               # ruff、prettier、shellcheck、shfmtで確認
 npm run format                             # ruff、prettier、shfmtで整形
+npm run test:ui                            # ライブ表示と振り返り画面をブラウザで開いて確かめ、スクリーンショットを撮る
 ```
 
 lintと整形のツールは、`uvx`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
+
+### 画面のテスト
+
+`npm run test:ui`は、`tests/test_ui.py`をPlaywrightで動かします。Playwrightは`uv`が版を固定して用意し、ブラウザは手元のGoogle Chromeを使います。
+
+- 空いているポートにテスト用のサーバーを立て、ダミーの記録とセッションで画面を開きます。普段使いのサーバーと記録には触れません。
+- 確かめること: 複数の幅で横にはみ出さないこと、タイルの「×」の2回押し、振り返りのページ送りと表示件数、英語表示です。
+- スクリーンショットは`.tmp/screenshots/<日時>/`に保存されます。`.tmp/`はgitの管理から外してあります。
+- 普段の`npm test`には入れていません。Playwrightが無いと、このテストは飛ばされます。
 
 ## デモ
 
