@@ -9,7 +9,7 @@ import unittest
 import urllib.error
 import urllib.request
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "plugin")
 START = os.path.join(ROOT, "scripts", "start-server.sh")
 STOP = os.path.join(ROOT, "scripts", "stop-server.sh")
 

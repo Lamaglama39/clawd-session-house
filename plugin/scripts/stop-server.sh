@@ -4,14 +4,14 @@
 #  Stops the server.py started by start-server.sh.
 #  The server is shared by all sessions, so it is not called on SessionEnd; run it by hand.
 #
-#  Usage:  scripts/stop-server.sh [--port 9000]
+#  Usage:  plugin/scripts/stop-server.sh [--port 9000]
 #  CLAUDE_STATUS_PORT / CLAUDE_STATUS_RUN_DIR work as in start-server.sh.
 #  Only the server on the given port is stopped; servers on other ports are left alone.
 # ============================================================================
 
-# DIR is the root of the repository (plugin)
+# DIR is the root of the plugin. A manual install keeps run/ one level up, at the repository root
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RUN="${CLAUDE_STATUS_RUN_DIR:-${CLAUDE_PLUGIN_DATA:-$DIR}/run}"
+RUN="${CLAUDE_STATUS_RUN_DIR:-${CLAUDE_PLUGIN_DATA:-$(dirname "$DIR")}/run}"
 
 PORT="${CLAUDE_STATUS_PORT:-8765}"
 case "$1" in

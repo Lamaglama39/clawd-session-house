@@ -6,12 +6,12 @@ Only hook handlers whose command carries this installer's tag comment
 hook is preserved. A timestamped backup is written before the file is changed.
 
 Usage:
-    python3 scripts/install-hooks.py              # ~/.claude/settings.json (all projects)
-    python3 scripts/install-hooks.py --dry-run    # show the result without writing
-    python3 scripts/install-hooks.py --uninstall
-    python3 scripts/install-hooks.py --settings PROJECT/.claude/settings.local.json
-    python3 scripts/install-hooks.py --port 9000
-    python3 scripts/install-hooks.py --url http://192.168.1.10:8765/hook
+    python3 plugin/scripts/install-hooks.py              # ~/.claude/settings.json (all projects)
+    python3 plugin/scripts/install-hooks.py --dry-run    # show the result without writing
+    python3 plugin/scripts/install-hooks.py --uninstall
+    python3 plugin/scripts/install-hooks.py --settings PROJECT/.claude/settings.local.json
+    python3 plugin/scripts/install-hooks.py --port 9000
+    python3 plugin/scripts/install-hooks.py --url http://192.168.1.10:8765/hook
 """
 
 import argparse

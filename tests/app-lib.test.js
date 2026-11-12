@@ -16,8 +16,8 @@ import {
   splitUnits,
   taskSummary,
   visibleAgents,
-} from "../web/app-lib.js";
-import { setLang } from "../web/i18n.js";
+} from "../plugin/web/app-lib.js";
+import { setLang } from "../plugin/web/i18n.js";
 
 // The default language follows the runtime, so pin it for tests that check Japanese output
 setLang("ja");

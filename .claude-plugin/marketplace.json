@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "clawd-session-house",
-      "source": "./",
+      "source": "./plugin",
       "description": "Watch every Claude Code session as an animated room in your browser: live status, approval alerts, subagents, and a local history."
     }
   ]

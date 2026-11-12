@@ -12,7 +12,9 @@ import unittest
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "server"))
+sys.path.insert(
+    0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "plugin", "server")
+)
 
 import history  # noqa: E402
 import server  # noqa: E402

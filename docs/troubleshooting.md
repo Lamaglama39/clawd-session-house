@@ -19,7 +19,7 @@
 
 ## サブエージェントやタスクが表示されない
 
-手動で入れた場合は、`SubagentStart`などのフックが登録されていない可能性があります。`python3 scripts/install-hooks.py`を実行し直してください。
+手動で入れた場合は、`SubagentStart`などのフックが登録されていない可能性があります。`python3 plugin/scripts/install-hooks.py`を実行し直してください。
 
 ## 振り返り画面に「履歴を読み込めません」と出る
 
@@ -28,7 +28,7 @@
 そのあと、サーバーを起動し直します。
 
 - プラグインで入れた場合: `/clawd-session-house:restart`
-- 手動で入れた場合: `./scripts/stop-server.sh && ./scripts/start-server.sh`
+- 手動で入れた場合: `./plugin/scripts/stop-server.sh && ./plugin/scripts/start-server.sh`
 
 ## 承認を拒否したのに「承認待ち」のまま / Escで中断したのに「処理中」のまま
 
@@ -63,7 +63,7 @@ Claude Codeの承認ダイアログは出たままなので、Claude Codeの画�
 ## 記録が二重に数えられる
 
 プラグインと手動の両方でフックを登録していると、イベントが2回届きます。
-プラグインを使っていて、`~/.claude/settings.json`に`# clawd-session-house`の付いたフックが残っているときは、リポジトリの直下で`python3 scripts/install-hooks.py --uninstall`を実行して外してください。
+プラグインを使っていて、`~/.claude/settings.json`に`# clawd-session-house`の付いたフックが残っているときは、リポジトリの直下で`python3 plugin/scripts/install-hooks.py --uninstall`を実行して外してください。
 
 ## ポートが使用中で起動できない
 
