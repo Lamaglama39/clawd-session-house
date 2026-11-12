@@ -77,7 +77,6 @@ const EN = {
   "{n}回": "{n}",
   "{n}件": "{n}",
   "{date}({day})": "{date} ({day})",
-  その他: "Other",
   // Review
   "振り返り | Clawd Session House": "History | Clawd Session House",
   期間: "Period",
@@ -106,6 +105,11 @@ const EN = {
   セッション: "Sessions",
   "行を選ぶと、状態の移り変わりとサブエージェントの動きを表示します":
     "Select a row to see its state timeline and subagents",
+  表示件数: "Rows per page",
+  ページ送り: "Pages",
+  前のページ: "Previous page",
+  次のページ: "Next page",
+  "{first}–{last} / {total}件": "{first}–{last} of {total}",
   開始時刻: "Started",
   セッション名: "Session",
   セッション時間: "Duration",

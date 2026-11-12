@@ -99,8 +99,13 @@
               行を選ぶと、状態の移り変わりとサブエージェントの動きを表示します
             </p>
           </div>
+          <label class="page-size">
+            <span data-i18n>表示件数</span>
+            <select id="page-size"></select>
+          </label>
         </div>
         <div class="table-wrap"><table class="sessions" id="sessions"></table></div>
+        <div id="sessions-pager"></div>
         <div class="detail" id="detail" hidden></div>
       </section>
     </main>

@@ -4,12 +4,12 @@
 
 import {
   durationTicks,
-  foldOthers,
   formatCount,
   formatDate,
   formatDuration,
   formatTime,
   labelIndices,
+  paginate,
   parsePeriod,
   periodDates,
   periodQuery,
@@ -29,6 +29,10 @@ const SERIES = {
 };
 const MAX_BAR = 24;
 const GAP = 2;
+// Rows per page of the three summary cards. They sit side by side, so one count keeps them level
+const RANK_PAGE_SIZE = 5;
+const SESSION_PAGE_SIZES = [20, 50, 100];
+const PAGE_SIZE_KEY = "claude-status.history-page-size";
 
 const main = document.getElementById("main");
 const notice = document.getElementById("notice");
@@ -38,6 +42,8 @@ const rangeButtons = [...document.querySelectorAll(".range button")];
 const datesGroup = document.querySelector(".dates");
 const fromInput = document.getElementById("from");
 const toInput = document.getElementById("to");
+const pageSizeSelect = document.getElementById("page-size");
+const sessionsPager = document.getElementById("sessions-pager");
 
 let period = parsePeriod(location.hash);
 let summary = null;
@@ -46,6 +52,8 @@ let loadToken = 0;
 let sessionList = [];
 /** @type {{key: number, dir: 1|-1}|null} Column index and direction; null keeps the server order. */
 let sessionSort = null;
+let sessionPage = 1;
+let sessionPageSize = readPageSize();
 
 /** Session table columns: heading, sort value, and whether it is a text column. */
 const SESSION_COLUMNS = [
@@ -412,11 +420,91 @@ function inlineBar(value, max, text, color) {
   );
 }
 
+// ===== Paging =====
+
+function readPageSize() {
+  try {
+    const saved = Number(localStorage.getItem(PAGE_SIZE_KEY));
+    if (SESSION_PAGE_SIZES.includes(saved)) return saved;
+  } catch {
+    // Without storage, every visit starts from the default
+  }
+  return SESSION_PAGE_SIZES[0];
+}
+
+/**
+ * Previous and next buttons around the rows shown. Null when one page holds every row.
+ * @param {{page: number, pages: number, first: number, last: number}} view  From paginate().
+ * @param {number} total
+ * @param {(page: number, dir: 1|-1) => void} onPage
+ */
+function pager(view, total, onPage) {
+  if (view.pages <= 1) return null;
+  const step = (dir, label, mark) =>
+    h(
+      "button",
+      {
+        type: "button",
+        class: "pager-step",
+        "data-dir": dir,
+        title: label,
+        "aria-label": label,
+        disabled: view.page + dir < 1 || view.page + dir > view.pages,
+        onclick: () => onPage(view.page + dir, dir),
+      },
+      mark,
+    );
+  return h(
+    "nav",
+    { class: "pager", "aria-label": t("ページ送り") },
+    step(-1, t("前のページ"), "‹"),
+    h("span", {
+      class: "pager-range",
+      "aria-live": "polite",
+      text: t("{first}–{last} / {total}件", {
+        first: formatCount(view.first),
+        last: formatCount(view.last),
+        total: formatCount(total),
+      }),
+    }),
+    step(1, t("次のページ"), "›"),
+  );
+}
+
+/** The controls are rebuilt on every page, so keep focus on the button that was pressed. */
+function refocus(root, dir) {
+  const steps = [...root.querySelectorAll(".pager-step")];
+  // At the first or last page the pressed button is disabled, so move to the other one
+  (
+    steps.find((b) => b.dataset.dir === String(dir) && !b.disabled) ||
+    steps.find((b) => !b.disabled)
+  )?.focus({ preventScroll: true });
+}
+
+/**
+ * Show rows a page at a time in a summary card.
+ * @param {HTMLElement} root
+ * @param {object[]} rows  Every row, so bars keep one scale across pages.
+ * @param {(pageRows: object[]) => HTMLElement} build  Builds the table for one page.
+ */
+function renderPaged(root, rows, build, page = 1, dir = 0) {
+  const view = paginate(rows, page, RANK_PAGE_SIZE);
+  const controls = pager(view, rows.length, (p, d) => renderPaged(root, rows, build, p, d));
+  if (view.page === 1) root.style.minHeight = "";
+  root.replaceChildren(...[build(view.rows), controls].filter(Boolean));
+  // Keep the height of a full page, so a short last page does not shrink the whole row of cards.
+  // Sum the children because the root itself is stretched to the tallest card
+  if (view.page === 1 && controls) {
+    root.style.minHeight = `${[...root.children].reduce((sum, c) => sum + c.offsetHeight, 0)}px`;
+  }
+  if (dir) refocus(root, dir);
+}
+
 function renderProjects(projects) {
   const root = document.getElementById("projects");
   if (!projects.length) return root.replaceChildren(emptyNote());
   const max = Math.max(...projects.map((p) => p.busyMs));
-  root.replaceChildren(
+  renderPaged(root, projects, (rows) =>
     tableWrap(
       "table",
       {},
@@ -436,7 +524,7 @@ function renderProjects(projects) {
       h(
         "tbody",
         {},
-        projects.map((p) =>
+        rows.map((p) =>
           h(
             "tr",
             {},
@@ -455,9 +543,8 @@ function renderProjects(projects) {
 function renderTools(tools) {
   const root = document.getElementById("tools");
   if (!tools.length) return root.replaceChildren(emptyNote());
-  const rows = foldOthers(tools, 12, "tool");
-  const max = Math.max(...rows.map((r) => r.count));
-  root.replaceChildren(
+  const max = Math.max(...tools.map((r) => r.count));
+  renderPaged(root, tools, (rows) =>
     h(
       "table",
       { class: "tools-table" },
@@ -490,8 +577,8 @@ function renderAgents(agents) {
   const root = document.getElementById("agents");
   if (!agents.length)
     return root.replaceChildren(emptyNote(t("この期間はサブエージェントを使っていません")));
-  root.replaceChildren(
-    h(
+  renderPaged(root, agents, (rows) =>
+    tableWrap(
       "table",
       {},
       h(
@@ -508,7 +595,7 @@ function renderAgents(agents) {
       h(
         "tbody",
         {},
-        agents.map((a) =>
+        rows.map((a) =>
           h(
             "tr",
             {},
@@ -532,12 +619,14 @@ function sessionName(sess) {
 function renderSessions(sessions) {
   const table = document.getElementById("sessions");
   const detail = document.getElementById("detail");
+  sessionList = sessions;
+  sessionPage = 1;
   if (!sessions.length) {
     table.replaceChildren(h("tbody", {}, h("tr", {}, h("td", {}, emptyNote()))));
+    sessionsPager.replaceChildren();
     detail.hidden = true;
     return;
   }
-  sessionList = sessions;
   drawSessionTable();
   if (selectedId && sessions.some((x) => x.id === selectedId)) selectSession(selectedId, false);
   else detail.hidden = true;
@@ -548,14 +637,29 @@ function sortSessions(key) {
   // Numbers and dates start descending, names ascending
   const first = SESSION_COLUMNS[key].text ? 1 : -1;
   sessionSort = { key, dir: sessionSort?.key === key ? -sessionSort.dir : first };
+  sessionPage = 1;
   drawSessionTable();
+}
+
+/** Show another page and bring the card's heading back if the table top scrolled out of view. */
+function turnSessionPage(page, dir) {
+  sessionPage = page;
+  drawSessionTable();
+  refocus(sessionsPager, dir);
+  const card = sessionsPager.closest(".card");
+  const top = card.getBoundingClientRect().top - document.querySelector(".hbar").offsetHeight;
+  if (top < 0) window.scrollBy({ top: top - 8 });
 }
 
 function drawSessionTable() {
   // shortcut: only the latest 300 fetched sessions are sorted. If a period has more, sort on the server
-  const rows = sessionSort
+  const sorted = sessionSort
     ? sortRows(sessionList, SESSION_COLUMNS[sessionSort.key].value, sessionSort.dir)
     : sessionList;
+  const view = paginate(sorted, sessionPage, sessionPageSize);
+  sessionPage = view.page;
+  sessionsPager.replaceChildren(...[pager(view, sorted.length, turnSessionPage)].filter(Boolean));
+  const rows = view.rows;
   const head = h(
     "thead",
     {},
@@ -792,6 +896,23 @@ for (const input of [fromInput, toInput]) {
     setPeriod({ from: fromInput.value, to: toInput.value });
   });
 }
+
+pageSizeSelect.replaceChildren(
+  ...SESSION_PAGE_SIZES.map((n) => h("option", { value: n, text: formatCount(n) })),
+);
+pageSizeSelect.value = String(sessionPageSize);
+pageSizeSelect.addEventListener("change", () => {
+  const size = Number(pageSizeSelect.value);
+  // Stay on the page that holds the first row shown so far
+  sessionPage = Math.floor(((sessionPage - 1) * sessionPageSize) / size) + 1;
+  sessionPageSize = size;
+  try {
+    localStorage.setItem(PAGE_SIZE_KEY, String(size));
+  } catch {
+    // Without storage, the choice lasts until the page is reloaded
+  }
+  if (sessionList.length) drawSessionTable();
+});
 
 let resizeTimer = 0;
 window.addEventListener("resize", () => {

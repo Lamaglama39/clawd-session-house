@@ -152,18 +152,21 @@ export function timelineLayout(segments, start, end, minPct = 0.3) {
 }
 
 /**
- * Keep the top ``limit`` entries and fold the rest into an "その他" row.
+ * Cut one page out of rows, moving the page into the range of pages that exist.
  *
- * @param {{count: number}[]} rows  Sorted by count desc.
- * @param {number} limit
- * @param {string} key  Name field.
- * @returns {object[]}
+ * @param {object[]} rows
+ * @param {number} page  1-based page number.
+ * @param {number} size  Rows per page.
+ * @returns {{rows: object[], page: number, pages: number, first: number, last: number}}
+ *   ``first`` and ``last`` are 1-based row numbers on the page, or 0 when there are no rows.
  */
-export function foldOthers(rows, limit, key) {
-  if (rows.length <= limit) return rows;
-  const head = rows.slice(0, limit - 1);
-  const rest = rows.slice(limit - 1).reduce((sum, r) => sum + r.count, 0);
-  return [...head, { [key]: t("その他"), count: rest, other: true }];
+export function paginate(rows, page, size) {
+  const pages = Math.max(1, Math.ceil(rows.length / size));
+  const current = Math.min(Math.max(1, page), pages);
+  const start = (current - 1) * size;
+  const slice = rows.slice(start, start + size);
+  const first = slice.length ? start + 1 : 0;
+  return { rows: slice, page: current, pages, first, last: start + slice.length };
 }
 
 /**

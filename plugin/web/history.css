@@ -262,6 +262,83 @@ p {
   text-align: center;
 }
 
+/* ===== Paging ===== */
+
+/* Cards in a row share one height, so keep their page controls on the same bottom line */
+.cols .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cols .card > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.pager-range {
+  min-width: 7em;
+  color: var(--text-2);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.pager-step {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pager-step:hover:not(:disabled) {
+  border-color: var(--muted);
+  color: var(--text);
+}
+
+.pager-step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.page-size {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.page-size select {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text-2);
+  font: inherit;
+  cursor: pointer;
+}
+
+.page-size select:hover {
+  border-color: var(--muted);
+}
+
 /* ===== Metrics ===== */
 
 /* Metrics share one band, separated by 1px lines on the right and bottom of each metric.
