@@ -129,6 +129,8 @@ Claude Codeは、`plugin/.claude-plugin/plugin.json`の`version`で更新を見�
 ├── NOTICE                Clawdの権利表記と、MITライセンスの対象外にしたファイル
 ├── SECURITY.md           脆弱性の報告方法
 ├── docs/                 仕様、設定と運用、困ったとき、開発。images/にREADMEのスクリーンショット
+├── CLAUDE.md             Claude Codeで開発するときの指示
+├── .claude/              Claude Codeの設定と、検証のスキルverify
 ├── .claude-plugin/       マーケットプレイスの定義marketplace.json。sourceは./plugin
 ├── plugin/               プラグイン本体。利用者の手元にコピーされるのはここだけ
 │   ├── .claude-plugin/   プラグインの定義plugin.json

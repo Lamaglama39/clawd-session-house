@@ -13,3 +13,7 @@ node_modules/
 
 # History database for the review page
 /data/
+
+# Personal Claude Code settings and notes (shared ones live in .claude/)
+.claude/settings.local.json
+CLAUDE.local.md
