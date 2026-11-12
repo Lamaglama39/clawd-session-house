@@ -34,7 +34,7 @@ python3 plugin/scripts/demo.py --static 6 --url http://127.0.0.1:9000/hook
 CLAUDE_STATUS_PORT=9000 ./plugin/scripts/stop-server.sh
 ```
 
-`--static`で作ったタイルは動いているセッションとして扱われるため「×」は出ません。サーバーを再起動すると消えます。
+`--static`で作ったタイルは動いているセッションとして扱われるので、「×」を2回押すと消えます。サーバーを再起動しても消えます。
 
 ## ダミーの記録で試す
 

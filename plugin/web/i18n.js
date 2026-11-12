@@ -25,6 +25,8 @@ const EN = {
   "Claude Codeを起動すると、ここにセッションが表示されます":
     "Start Claude Code and its sessions appear here",
   このタイルを消す: "Remove this tile",
+  消す: "Remove",
+  もう一度押すとタイルを消します: "Press again to remove this tile",
   サブエージェント実行中: "Running a subagent",
   "入力待ち（サブエージェント{n}件が作業中）": "Waiting for input ({n} subagents working)",
   "入力待ち（バックグラウンド{n}件）": "Waiting for input ({n} in the background)",
