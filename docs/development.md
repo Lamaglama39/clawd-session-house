@@ -3,12 +3,17 @@
 ## テスト
 
 ```bash
+npm run check                              # テスト、lint、整形の確認、プラグインの検証をまとめて実行
 npm test                                   # 下の2つをまとめて実行
 python3 -m unittest discover -s tests -v   # サーバー、サブエージェント、履歴、インストーラー、スクリプト、ファイルの配置のテスト
 node --test tests/*.test.js                # Clawd描画、レイアウト、振り返り画面の計算。Node.js 22以上
 claude plugin validate .                   # マーケットプレイスの定義を検証
 claude plugin validate plugin              # プラグインの定義を検証
+npm run lint                               # ruff、prettier、shellcheck、shfmtで確認
+npm run format                             # ruff、prettier、shfmtで整形
 ```
+
+lintと整形のツールは、`uvx`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
 
 ## デモ
 
@@ -91,9 +96,7 @@ Claude Codeは、`plugin/.claude-plugin/plugin.json`の`version`で更新を見�
 2. テストと検証を通します。マーケットプレイスとプラグインの両方を、`--strict`で検証します。`--strict`を付けると、警告も失敗として扱います。
 
    ```bash
-   npm test
-   claude plugin validate --strict .
-   claude plugin validate --strict plugin
+   npm run check
    ```
 
 3. `main`にpushします。
