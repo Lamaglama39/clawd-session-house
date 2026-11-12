@@ -11,9 +11,27 @@ claude plugin validate .                   # マーケットプレイスの定�
 claude plugin validate plugin              # プラグインの定義を検証
 npm run lint                               # ruff、prettier、shellcheck、shfmtで確認
 npm run format                             # ruff、prettier、shfmtで整形
+npm run test:ui                            # ライブ表示と振り返り画面をブラウザで開いて確かめ、スクリーンショットを撮る
 ```
 
-lintと整形のツールは、`uvx`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
+lintと整形のツールは、`uv run --isolated --no-project --with`と`npx`で版を固定して実行します。`uv`とNode.jsがあれば、ツールを手元に入れる必要はありません。
+
+### ツールの版
+
+取得するのは、公開から7日たった版だけです。公開直後の版に問題があったときに、巻き込まれないようにするためです。
+
+- 直下の`uv.toml`（`exclude-newer = "7 days"`）と`.npmrc`（`min-release-age=7`）で決めています。それより新しい版を指定すると、取得できずに失敗します。uv 0.12.6とnpm 11.19で確かめています。
+- `uvx`は、リポジトリの`uv.toml`を読みません。このリポジトリでは`uvx`を使わず、`uv run --isolated --no-project --with`を使います。`--isolated`を付けるのは、手元のPythonに入っているパッケージをツールから見えなくし、取得した版だけで動かすためです。
+- 版を上げるときは、`package.json`の版を、公開から7日以上たった版に書き換えます。
+
+### 画面のテスト
+
+`npm run test:ui`は、`tests/test_ui.py`をPlaywrightで動かします。Playwrightは`uv`が版を固定して用意し、ブラウザは手元のGoogle Chromeを使います。
+
+- 空いているポートにテスト用のサーバーを立て、ダミーの記録とセッションで画面を開きます。普段使いのサーバーと記録には触れません。
+- 確かめること: 複数の幅で横にはみ出さないこと、タイルの「×」の2回押し、振り返りのページ送りと表示件数、英語表示です。
+- スクリーンショットは`.tmp/screenshots/<日時>/`に保存されます。`.tmp/`はgitの管理から外してあります。
+- 普段の`npm test`には入れていません。Playwrightが無いと、このテストは飛ばされます。
 
 ## デモ
 
@@ -34,7 +52,7 @@ python3 plugin/scripts/demo.py --static 6 --url http://127.0.0.1:9000/hook
 CLAUDE_STATUS_PORT=9000 ./plugin/scripts/stop-server.sh
 ```
 
-`--static`で作ったタイルは動いているセッションとして扱われるため「×」は出ません。サーバーを再起動すると消えます。
+`--static`で作ったタイルは動いているセッションとして扱われるので、「×」を2回押すと消えます。サーバーを再起動しても消えます。
 
 ## ダミーの記録で試す
 
@@ -131,6 +149,7 @@ Claude Codeは、`plugin/.claude-plugin/plugin.json`の`version`で更新を見�
 ├── docs/                 仕様、設定と運用、困ったとき、開発。images/にREADMEのスクリーンショット
 ├── CLAUDE.md             Claude Codeで開発するときの指示
 ├── .claude/              Claude Codeの設定と、検証のスキルverify
+├── uv.toml / .npmrc      ツールを公開から7日たった版だけにする設定
 ├── .claude-plugin/       マーケットプレイスの定義marketplace.json。sourceは./plugin
 ├── plugin/               プラグイン本体。利用者の手元にコピーされるのはここだけ
 │   ├── .claude-plugin/   プラグインの定義plugin.json

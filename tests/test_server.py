@@ -194,6 +194,18 @@ class SessionStoreTest(unittest.TestCase):
         self.assertTrue(self.store.remove("s1"))
         self.assertFalse(self.store.remove("s1"))
 
+    def test_remove_live_session_until_its_next_event(self):
+        # A session whose SessionEnd never arrived looks live; the dashboard lets users remove it
+        self.store.apply_event(event("SessionStart", source="startup", session_title="Fix"))
+        self.store.apply_event(event("PreToolUse", tool_name="Bash"))
+        self.assertTrue(self.store.remove("s1"))
+        self.assertEqual(self.store.snapshot()["sessions"], [])
+        # If the session was still alive, its next event brings the tile back
+        self.store.apply_event(event("PostToolUse", tool_name="Bash"))
+        s = self.state()
+        self.assertEqual(s["state"], "BUSY")
+        self.assertIsNone(s["title"])
+
     def test_wait_for_change_wakes_up(self):
         version = self.store.version
         threading.Timer(0.05, lambda: self.store.apply_event(event("Stop"))).start()

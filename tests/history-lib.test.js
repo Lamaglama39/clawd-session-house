@@ -3,11 +3,11 @@ import { test } from "node:test";
 
 import {
   durationTicks,
-  foldOthers,
   formatCount,
   formatDate,
   formatDuration,
   labelIndices,
+  paginate,
   parsePeriod,
   periodDates,
   periodQuery,
@@ -67,11 +67,7 @@ test("formatters switch to English", () => {
     assert.equal(formatCount(12_900), "12,900");
     assert.equal(formatDate("2026-10-25", true), "10/25 (Sun)");
     assert.equal(durationTicks(17 * MIN).label(10 * MIN), "10m");
-    assert.deepEqual(foldOthers([{ count: 3 }, { count: 2 }, { count: 1 }], 2, "tool")[1], {
-      tool: "Other",
-      count: 3,
-      other: true,
-    });
+    assert.equal(t("{first}–{last} / {total}件", { first: 1, last: 5, total: 11 }), "1–5 of 11");
   });
 });
 
@@ -112,19 +108,21 @@ test("timelineLayout merges START into IDLE and skips OFF", () => {
   assert.equal(tiny[0].width, 0.5);
 });
 
-test("foldOthers keeps the head and sums the tail", () => {
-  const rows = [
-    { tool: "Bash", count: 9 },
-    { tool: "Read", count: 5 },
-    { tool: "Edit", count: 2 },
-    { tool: "Grep", count: 1 },
-  ];
-  assert.deepEqual(foldOthers(rows, 3, "tool"), [
-    { tool: "Bash", count: 9 },
-    { tool: "Read", count: 5 },
-    { tool: "その他", count: 3, other: true },
-  ]);
-  assert.equal(foldOthers(rows, 10, "tool").length, 4);
+test("paginate cuts pages and keeps the page in range", () => {
+  const rows = Array.from({ length: 11 }, (_, i) => i + 1);
+  assert.deepEqual(paginate(rows, 1, 5), {
+    rows: [1, 2, 3, 4, 5],
+    page: 1,
+    pages: 3,
+    first: 1,
+    last: 5,
+  });
+  assert.deepEqual(paginate(rows, 3, 5), { rows: [11], page: 3, pages: 3, first: 11, last: 11 });
+  // A page past the end (the list got shorter) shows the last page, and page 0 the first
+  assert.equal(paginate(rows, 9, 5).page, 3);
+  assert.equal(paginate(rows, 0, 5).page, 1);
+  assert.equal(paginate(rows, 1, 20).pages, 1);
+  assert.deepEqual(paginate([], 2, 5), { rows: [], page: 1, pages: 1, first: 0, last: 0 });
 });
 
 test("sortRows sorts numbers and Japanese text without touching the input", () => {

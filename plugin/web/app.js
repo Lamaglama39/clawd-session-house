@@ -34,6 +34,8 @@ const GRID_GAP = 16;
 const GROUP_GAP = 24;
 const CURSOR_HIDE_MS = 3000;
 const TEXT_REFRESH_MS = 250;
+// How long the x of a live tile waits for the second press
+const DISMISS_CONFIRM_MS = 3000;
 const ORDER_KEY = "claude-status.order";
 
 applyI18n();
@@ -163,9 +165,23 @@ function createTile(s) {
     refs,
     floor: 0,
   };
-  el.querySelector(".tile-dismiss").addEventListener("click", () => {
-    // The x only shows on ended tiles, but a click during a state change must not delete a live session
-    if (tile.session.state !== "OFF") return;
+  const dismiss = el.querySelector(".tile-dismiss");
+  let disarm = 0;
+  const setConfirm = (on) => {
+    dismiss.classList.toggle("confirm", on);
+    dismiss.textContent = on ? t("消す") : "×";
+    const label = on ? t("もう一度押すとタイルを消します") : t("このタイルを消す");
+    dismiss.title = label;
+    dismiss.setAttribute("aria-label", label);
+  };
+  dismiss.addEventListener("click", () => {
+    // A live tile loses its title, tasks, and subagents until its next event, so ask once more
+    if (tile.session.state !== "OFF" && !dismiss.classList.contains("confirm")) {
+      setConfirm(true);
+      clearTimeout(disarm);
+      disarm = setTimeout(() => setConfirm(false), DISMISS_CONFIRM_MS);
+      return;
+    }
     fetch(`api/sessions/${encodeURIComponent(tile.session.id)}`, { method: "DELETE" }).catch(
       () => {},
     );
